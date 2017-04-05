@@ -7,6 +7,7 @@ addons:
     packages:
       - libasound2-dev
       - oracle-java8-installer
+      - oracle-java8-set-default
 language: cpp
 before_script:
   - git submodule update --init --recursive
