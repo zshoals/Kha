@@ -10,13 +10,16 @@ language: android
 jdk: oraclejdk8
 android:
   components:
-    - build-tools-19.1.0
-    - android-22
+    - build-tools-25.0.2
+    - android-25
     - extra
 before_script:
   - git submodule update --init --recursive
   - git clone https://github.com/ktxsoftware/nodejs_bin.git --depth 1
   - nodejs_bin/copysysbin.sh
+  - git clone https://github.com/RobDangerous/Android-Licenses.git
+  - mkdir -p "$ANDROID_HOME/licenses"
+  - cp ./Android-Licenses/ "$ANDROID_HOME/licenses/"
 script:
   - nodejs_bin/node make.js html5 --kha . --from Tests/Empty
   - nodejs_bin/node make.js krom --kha . --from Tests/Empty
