@@ -19,7 +19,7 @@ before_script:
   - nodejs_bin/copysysbin.sh
   - git clone https://github.com/RobDangerous/Android-Licenses.git
   - mkdir -p "$ANDROID_HOME/licenses"
-  - cp ./Android-Licenses/ "$ANDROID_HOME/licenses/"
+  - cp -R Android-Licenses "$ANDROID_HOME/licenses/"
 script:
   - nodejs_bin/node make.js html5 --kha . --from Tests/Empty
   - nodejs_bin/node make.js krom --kha . --from Tests/Empty
