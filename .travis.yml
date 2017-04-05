@@ -7,8 +7,6 @@ addons:
   apt:
     packages:
       - libasound2-dev
-      - oracle-java8-installer
-      - oracle-java8-set-default
 language: android
 before_script:
   - git submodule update --init --recursive
