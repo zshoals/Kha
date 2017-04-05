@@ -9,7 +9,7 @@ addons:
       - libasound2-dev
       - oracle-java8-installer
       - oracle-java8-set-default
-language: cpp
+language: android
 before_script:
   - git submodule update --init --recursive
   - git clone https://github.com/ktxsoftware/nodejs_bin.git --depth 1
