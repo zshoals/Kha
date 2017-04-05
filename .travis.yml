@@ -10,8 +10,8 @@ language: android
 jdk: oraclejdk8
 android:
   components:
-    - build-tools-25.0.2
-    - android-25
+    - build-tools-19.1.0
+    - android-22
     - extra
 before_script:
   - git submodule update --init --recursive
