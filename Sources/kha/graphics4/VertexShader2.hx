@@ -2,7 +2,7 @@ package kha.graphics4;
 
 import kha.Blob;
 
-extern class VertexShader {
+extern class VertexShader2 {
 	public function new(source: Blob, file: String);
 	public function delete(): Void;
 

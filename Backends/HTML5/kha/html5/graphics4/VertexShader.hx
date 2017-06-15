@@ -1,8 +1,8 @@
-package kha.graphics4;
+package kha.html5.graphics4;
 
 import js.html.webgl.GL;
 
-class FragmentShader {
+class VertexShader {
 	public var sources: Array<String>;
 	public var type: Dynamic;
 	public var shader: Dynamic;
@@ -13,13 +13,13 @@ class FragmentShader {
 		for (source in sources) {
 			this.sources.push(source.toString());
 		}
-		this.type = GL.FRAGMENT_SHADER;
+		this.type = GL.VERTEX_SHADER;
 		this.shader = null;
 		this.files = files;
 	}
 
-	public static function fromSource(source: String): FragmentShader {
-		var shader = new FragmentShader([], ["runtime-string"]);
+	public static function fromSource(source: String): VertexShader {
+		var shader = new VertexShader([], ["runtime-string"]);
 		shader.sources.push(source);
 		return shader;
 	}

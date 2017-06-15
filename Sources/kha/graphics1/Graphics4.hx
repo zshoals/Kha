@@ -81,6 +81,10 @@ class Graphics4 implements kha.graphics4.Graphics {
 		
 	}
 
+	public function setImageTexture(unit: TextureUnit, texture: Image): Void {
+		
+	}
+
 	public function setTextureDepth(unit: TextureUnit, texture: Image): Void {
 
 	}

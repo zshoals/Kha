@@ -1,8 +1,9 @@
-package kha.graphics4;
+package kha.html5.graphics4;
 
 import js.html.webgl.GL;
 import haxe.io.Bytes;
-import kha.js.graphics4.Graphics;
+import kha.graphics4.DepthStencilFormat;
+import kha.graphics4.TextureFormat;
 
 class CubeMap implements Canvas implements Resource {
 

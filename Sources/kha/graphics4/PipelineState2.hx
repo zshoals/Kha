@@ -1,6 +1,6 @@
 package kha.graphics4;
 
-extern class PipelineState extends PipelineStateBase {
+extern class PipelineState2 extends PipelineStateBase {
 	public function new();
 	public function delete(): Void;
 	public function compile(): Void;

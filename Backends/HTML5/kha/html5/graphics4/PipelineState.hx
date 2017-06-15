@@ -1,7 +1,8 @@
-package kha.graphics4;
+package kha.html5.graphics4;
 
 import js.html.webgl.GL;
 import kha.graphics4.FragmentShader;
+import kha.graphics4.PipelineStateBase;
 import kha.graphics4.VertexData;
 import kha.graphics4.VertexShader;
 import kha.graphics4.VertexStructure;
