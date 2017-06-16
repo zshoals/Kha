@@ -66,9 +66,9 @@ class Graphics implements kha.graphics4.Graphics {
 		isCubeMap = Std.is(renderTarget, CubeMap);
 		if (isCubeMap) {
 			var cubeMap: CubeMap = cast(renderTarget, CubeMap);
-			renderTargetFrameBuffer = cubeMap.frameBuffer;
-			renderTargetTexture = cubeMap.texture;
-			isDepthAttachment = cubeMap.isDepthAttachment;
+			renderTargetFrameBuffer = cubeMap.html5.frameBuffer;
+			renderTargetTexture = cubeMap.html5.texture;
+			isDepthAttachment = cubeMap.html5.isDepthAttachment;
 		}
 		else {
 			var image: WebGLImage = cast(renderTarget, WebGLImage);
@@ -286,13 +286,13 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 
 	public function setVertexBuffer(vertexBuffer: kha.graphics4.VertexBuffer): Void {
-		cast(vertexBuffer, VertexBuffer).set(0);
+		vertexBuffer.html5.set(0);
 	}
 
 	public function setVertexBuffers(vertexBuffers: Array<kha.graphics4.VertexBuffer>): Void {
 		var offset: Int = 0;
 		for (vertexBuffer in vertexBuffers) {
-			offset += cast(vertexBuffer, VertexBuffer).set(offset);
+			offset += vertexBuffer.html5.set(offset);
 		}
 	}
 
@@ -404,12 +404,12 @@ class Graphics implements kha.graphics4.Graphics {
 			SystemImpl.gl.bindTexture(GL.TEXTURE_CUBE_MAP, null);
 		}
 		else {
-			cubeMap.set(cast(stage, TextureUnit).value);
+			cubeMap.html5.set(cast(stage, TextureUnit).value);
 		}
 	}
 	
 	public function setCubeMapDepth(stage: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
-		cubeMap.setDepth(cast(stage, TextureUnit).value);
+		cubeMap.html5.setDepth(cast(stage, TextureUnit).value);
 	}
 
 	public function setCullMode(mode: CullMode): Void {
@@ -430,7 +430,7 @@ class Graphics implements kha.graphics4.Graphics {
 		setDepthMode(pipe.depthWrite, pipe.depthMode);
 		setStencilParameters(pipe.stencilMode, pipe.stencilBothPass, pipe.stencilDepthFail, pipe.stencilFail, pipe.stencilReferenceValue, pipe.stencilReadMask, pipe.stencilWriteMask);
 		setBlendingMode(pipe.blendSource, pipe.blendDestination, pipe.blendOperation, pipe.alphaBlendSource, pipe.alphaBlendDestination, pipe.alphaBlendOperation);
-		pipe.set();
+		pipe.html5.set(pipe);
 		colorMaskRed = pipe.colorWriteMaskRed;
 		colorMaskGreen = pipe.colorWriteMaskGreen;
 		colorMaskBlue = pipe.colorWriteMaskBlue;

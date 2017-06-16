@@ -1,8 +1,10 @@
-package kha.graphics4;
+package kha.html5.graphics4;
 
 import js.html.webgl.GL;
 import haxe.io.Bytes;
 import kha.js.graphics4.Graphics;
+import kha.graphics4.DepthStencilFormat;
+import kha.graphics4.TextureFormat;
 
 class CubeMap implements Canvas implements Resource {
 
@@ -27,19 +29,14 @@ class CubeMap implements Canvas implements Resource {
 	private static inline var GL_DEPTH24_STENCIL8 = 0x88F0;
 	private static inline var GL_DEPTH32F_STENCIL8 = 0x8CAD;
 
-	private function new(size: Int, format: TextureFormat, renderTarget: Bool, depthStencilFormat: DepthStencilFormat) {
+	public function new(size: Int, format: TextureFormat = null, depthStencil: DepthStencilFormat = null, contextId: Int = 0) {
+		var renderTarget = true;
 		myWidth = size;
 		myHeight = size;
 		this.format = format;
 		this.renderTarget = renderTarget;
-		this.depthStencilFormat = depthStencilFormat;
+		this.depthStencilFormat = depthStencil;
 		if (renderTarget) createTexture();
-	}
-
-	public static function createRenderTarget(size: Int, format: TextureFormat = null, depthStencil: DepthStencilFormat = null, contextId: Int = 0): CubeMap {
-		if (format == null) format = TextureFormat.RGBA32;
-		if (depthStencil == null) depthStencil = NoDepthAndStencil;
-		return new CubeMap(size, format, true, depthStencil);
 	}
 
 	private function createTexture() {
@@ -141,16 +138,16 @@ class CubeMap implements Canvas implements Resource {
 	public function unlock(): Void { }
 
 	public var width(get, null): Int;
-	private function get_width(): Int { return myWidth; }
+	public function get_width(): Int { return myWidth; }
 	public var height(get, null): Int;
-	private function get_height(): Int { return myHeight; }
+	public function get_height(): Int { return myHeight; }
 
 	public var g1(get, null): kha.graphics1.Graphics;
-	private function get_g1(): kha.graphics1.Graphics { return null; }
+	public function get_g1(): kha.graphics1.Graphics { return null; }
 	public var g2(get, null): kha.graphics2.Graphics;
-	private function get_g2(): kha.graphics2.Graphics { return null; }
+	public function get_g2(): kha.graphics2.Graphics { return null; }
 	public var g4(get, null): kha.graphics4.Graphics;
-	private function get_g4(): kha.graphics4.Graphics {
+	public function get_g4(): kha.graphics4.Graphics {
 		if (graphics4 == null) {
 			graphics4 = new Graphics(this);
 		}

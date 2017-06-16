@@ -1,4 +1,4 @@
-package kha.graphics4;
+package kha.html5.graphics4;
 
 import js.html.webgl.GL;
 
@@ -18,9 +18,9 @@ class FragmentShader {
 		this.files = files;
 	}
 
-	public static function fromSource(source: String): FragmentShader {
-		var shader = new FragmentShader([], ["runtime-string"]);
-		shader.sources.push(source);
+	public static function fromSource(source: String): kha.graphics4.FragmentShader {
+		var shader = new kha.graphics4.FragmentShader([], ["runtime-string"]);
+		shader.html5.sources.push(source);
 		return shader;
 	}
 	

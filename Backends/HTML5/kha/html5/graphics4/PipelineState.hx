@@ -1,18 +1,18 @@
-package kha.graphics4;
+package kha.html5.graphics4;
 
 import js.html.webgl.GL;
 import kha.graphics4.FragmentShader;
+import kha.graphics4.PipelineStateBase;
 import kha.graphics4.VertexData;
 import kha.graphics4.VertexShader;
 import kha.graphics4.VertexStructure;
 
-class PipelineState extends PipelineStateBase {
+class PipelineState {
 	private var program: Dynamic;
 	private var textures: Array<String>;
 	private var textureValues: Array<Dynamic>;
 	
 	public function new() {
-		super();
 		program = SystemImpl.gl.createProgram();
 		textures = new Array<String>();
 		textureValues = new Array<Dynamic>();
@@ -21,15 +21,15 @@ class PipelineState extends PipelineStateBase {
 	public function delete(): Void {
 		SystemImpl.gl.deleteProgram(program);
 	}
-		
-	public function compile(): Void {
-		compileShader(vertexShader);
-		compileShader(fragmentShader);
-		SystemImpl.gl.attachShader(program, vertexShader.shader);
-		SystemImpl.gl.attachShader(program, fragmentShader.shader);
+	
+	public function compile(state: kha.graphics4.PipelineState): Void {
+		compileShader(state.vertexShader);
+		compileShader(state.fragmentShader);
+		SystemImpl.gl.attachShader(program, state.vertexShader.html5.shader);
+		SystemImpl.gl.attachShader(program, state.fragmentShader.html5.shader);
 		
 		var index = 0;
-		for (structure in inputLayout) {
+		for (structure in state.inputLayout) {
 			for (element in structure.elements) {
 				SystemImpl.gl.bindAttribLocation(program, index, element.name);
 				if (element.data == VertexData.Float4x4) {
@@ -47,10 +47,10 @@ class PipelineState extends PipelineStateBase {
 		}
 	}
 	
-	public function set(): Void {
+	public function set(state: kha.graphics4.PipelineState): Void {
 		SystemImpl.gl.useProgram(program);
 		for (index in 0...textureValues.length) SystemImpl.gl.uniform1i(textureValues[index], index);
-		SystemImpl.gl.colorMask(colorWriteMaskRed, colorWriteMaskGreen, colorWriteMaskBlue, colorWriteMaskAlpha);
+		SystemImpl.gl.colorMask(state.colorWriteMaskRed, state.colorWriteMaskGreen, state.colorWriteMaskBlue, state.colorWriteMaskAlpha);
 	}
 	
 	private function compileShader(shader: Dynamic): Void {

@@ -1,4 +1,4 @@
-package kha.graphics4;
+package kha.html5.graphics4;
 
 import js.html.webgl.GL;
 import kha.arrays.Float32Array;
