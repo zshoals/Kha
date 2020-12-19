@@ -55,6 +55,7 @@ class SystemImpl {
 	private static var ie: Bool = false;
 	public static var insideInputEvent: Bool = false;
 	static var window: Window;
+	public static var estimatedRefreshRate: Int = 60;
 
 	private static function errorHandler(message: String, source: String, lineno: Int, colno: Int, error: Dynamic) {
 		Browser.console.error("Error: " + message);
@@ -424,8 +425,6 @@ class SystemImpl {
 
 		kha.vr.VrInterface.instance = new VrInterface();
 
-		Scheduler.start();
-
 		var window: Dynamic = Browser.window;
 		var requestAnimationFrame = window.requestAnimationFrame;
 		if (requestAnimationFrame == null) requestAnimationFrame = window.mozRequestAnimationFrame;
@@ -476,8 +475,88 @@ class SystemImpl {
 			}
 		}
 
-		if (requestAnimationFrame == null) window.setTimeout(animate, 1000.0 / 60.0);
-		else requestAnimationFrame(animate);
+		var initialTimestamp: Int = 0;
+		var prevTimestamp: Int = 0;
+		var REFRESH_RATE_HEURISTIC_DURATION_MS: Int = 1000; //One second may not be accurate enough for low framerates
+		var heuristicTimeElapsedMs: Int = 0;
+		var meanTruncationCutoff: Float = 1 / 3; //Maybe too aggressive for low framerates?
+		var timeDiffs: Array<Int> = [];
+
+		function roundToKnownRefreshRate(hz:Int): Int {
+			var hz30 = {low: 27, high: 33, target: 30};
+			var hz60 = {low: 57, high: 63, target: 60};
+			var hz75 = {low: 72, high: 78, target: 75};
+			var hz90 = {low: 87, high: 93, target: 90};
+			var hz120 = {low: 117, high: 123, target: 120};
+			var hz144 = {low: 141, high: 147, target: 144};
+			var hz240 = {low: 237, high: 243, target: 240};
+			var hz340 = {low: 336, high: 343, target: 340};
+			var hz360 = {low: 357, high: 363, target: 360};
+
+			var rates = [hz30, hz60, hz75, hz90, hz120, hz144, hz240, hz340, hz360];
+
+			var nearestHz = hz;
+			for (rate in rates) {
+				if (hz >= rate.low && hz <= rate.high) {
+					nearestHz = rate.target;
+				}
+			}
+
+			return nearestHz;
+		}
+
+		//HTML5 has no real way to query the actual monitor refresh rate
+		//The only thing that can be done is attempt to measure the interval between requestAnimationFrame calls
+		//Without requestAnimationFrame we're out of luck and frequency is set to 60 anyway
+		//We try and make a best guess while nothing intensive is happening
+		function detectRefreshRate(timestamp) {
+			if (initialTimestamp == 0) initialTimestamp = timestamp;
+
+			var window: Dynamic = Browser.window;
+			var timeDifferential = (timestamp - prevTimestamp) - initialTimestamp;
+			prevTimestamp = (timestamp - initialTimestamp);
+			timeDiffs.push(timeDifferential);
+
+			if (heuristicTimeElapsedMs < REFRESH_RATE_HEURISTIC_DURATION_MS) {
+				heuristicTimeElapsedMs += timeDifferential;
+
+				if (requestAnimationFrame == null) window.setTimeout(detectRefreshRate, 1000.0 / 60.0);
+				else requestAnimationFrame(detectRefreshRate);
+			}
+			else {
+				//Throw out top and bottom extreme values before averaging
+				var truncatedTimeDiffs: Array<Int> = [];
+				{
+					haxe.ds.ArraySort.sort(timeDiffs, (a, b) -> {
+						a - b;
+					});
+
+					var cutoff = Math.round(timeDiffs.length * meanTruncationCutoff);
+					for (i in cutoff...timeDiffs.length - cutoff) {
+						truncatedTimeDiffs.push(timeDiffs[i]);
+					}
+
+					var total = 0;
+					for (time in truncatedTimeDiffs) {
+						total += time;
+					}
+
+					var avg = total / truncatedTimeDiffs.length;
+					//We may have an accurate frequency, but it might be possible to be off the actual refresh rate by a few hz
+					//Manually round to common refresh rates as well, just for security's sake
+					estimatedRefreshRate = roundToKnownRefreshRate(Math.round(1000 / avg));
+				}
+
+				Scheduler.start();
+
+				if (requestAnimationFrame == null) window.setTimeout(animate, 1000.0 / 60.0);
+				else requestAnimationFrame(animate);
+			}
+		}
+
+		//Run through refresh rate detection first and then start animating
+		if (requestAnimationFrame == null) window.setTimeout(detectRefreshRate, 1000.0 / 60.0);
+		else requestAnimationFrame(detectRefreshRate);
 
 		// Autofocus
 		canvas.focus();
