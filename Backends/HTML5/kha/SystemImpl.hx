@@ -1,5 +1,6 @@
 package kha;
 
+import haxe.Exception;
 import js.Syntax;
 import js.html.webgl.GL;
 import js.html.WheelEvent;
@@ -57,7 +58,7 @@ class SystemImpl {
 	static var window: Window;
 	public static var estimatedRefreshRate: Int = 60;
 
-	private static function errorHandler(message: String, source: String, lineno: Int, colno: Int, error: Dynamic) {
+	private static function errorHandler(message: String, source: String, lineno: Int, colno: Int, error: Exception) {
 		Browser.console.error("Error: " + message);
 		Browser.console.error("Stack:\n" + error.stack);
 		return true;
